@@ -71,7 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'seabattle.wsgi.application'
 
-
+#databasa
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
