@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seabattle',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
+        'USER': 'seabattle_user',
+        'PASSWORD': '12345QwErTy',
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
@@ -128,3 +129,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'core.User'
