@@ -1,0 +1,34 @@
+{% extends '../base.html' %}
+{% block body %}
+<style>
+        table {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            max-width: 500px;
+        }
+        button {
+            height: 100%;
+            width: 100%;
+        }
+        tr {
+            background-color:blue;
+        }
+        .mouse-select:hover {
+            background-color: gray;
+
+        }
+</style>
+<p>Hello 111</p>
+<table>
+    {% for row in field %}
+        <tr>
+            {% for item in row %}
+                <td>
+                    <button class="mouse-select" name="button_pressed" value="{{ item.index }}">{{ item.display_value }}</button>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+{% endblock body %}
