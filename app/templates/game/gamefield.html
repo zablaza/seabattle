@@ -1,11 +1,13 @@
 {% extends '../base.html' %}
+{% load static %}
 {% block body %}
+
 <style>
         table {
             width: 100%;
-            height: 100%;
-            min-height: 500px;
-            max-width: 500px;
+            height: 75vh;
+            min-height: 200px;
+            min-width: 200px;
         }
         button {
             height: 100%;
@@ -14,21 +16,80 @@
         tr {
             background-color:blue;
         }
+        td {
+            height: 9%;
+            width: 9%;
+            margin: 0px;
+            padding: 0px;
+            }
         .mouse-select:hover {
             background-color: gray;
 
         }
+        .container-2 {
+        margin-left: calc(50% - 550px);
+        width: calc(50% + 550px);
+            }
+
+        .box {
+              width: 500px;
+              height: 250px;
+              border: 1px solid black;
+              padding: 10px;
+              margin: 10px;
+              }
 </style>
-<p>Hello 111</p>
-<table>
-    {% for row in field %}
-        <tr>
-            {% for item in row %}
-                <td>
-                    <button class="mouse-select" name="button_pressed" value="{{ item.index }}">{{ item.display_value }}</button>
-                </td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
+
+</div>
+<div class="container">
+<div class="row">
+    <div class="col" style="background-color: red" onmousemove="coordinate(event)">
+        <canvas id="canvas" style="background-color: blue"></canvas>
+        <script src="{% static 'js/test.js'%}"></script>
+    </div>
+</div>
+    <div class="row">
+        <input id="X"/>
+        <input id="Y"/>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-5" style="background-color: red">
+            <p>Your field</p>
+
+            <table>
+                {% for row in field %}
+                    <tr>
+                        {% for item in row %}
+                            <td>
+                                <button class="mouse-select" name="button_pressed" value="{{ item.index }}">{{ item.display_value }}</button>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-2" style="background-color: blue">
+            Hello
+        </div>
+
+        <div class="col-5" style="background-color: yellow">
+            <p>Enemy's field</p>
+            <table>
+                {% for row in field %}
+                    <tr>
+                        {% for item in row %}
+                            <td>
+                                <button class="mouse-select" name="button_pressed" value="{{ item.index }}">{{ item.display_value }}</button>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
 {% endblock body %}
