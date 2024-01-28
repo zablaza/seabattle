@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>logout</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<form action="{% url 'playground:close_notification' %}" method="post">
+    {%csrf_token%}
+<div style="overflow-y: scroll; height:100px;" class="box">
+    <p>{{context}}</p>
+{% for a in last_not %}
+    <p>{{a.timestamp|date:'Y-m-d H:i'}}, {{a.notifications}}</p>
+    <button style="width:100px;height:20px" class="mouse-select" name="close_one_notification" value="{{ a.id }}">watched</button>
+{% endfor %}
+</div>
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button class="mouse-select" name="is_watched" value="2">watched all</button>
+</form>
+<div>Do you want to logout?</div>
+<form action="" method="post">
+    {%csrf_token%}
+    <button name="logout">Yes</button>
+</form>
+{{user.username}}
+{% endif %}
+</body>
+</html>
