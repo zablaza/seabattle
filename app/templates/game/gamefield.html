@@ -43,8 +43,8 @@
 </div>
 <div class="container">
 <div class="row">
-    <div class="col" style="background-color: red" onmousemove="coordinate(event)">
-        <canvas id="canvas" style="background-color: blue"></canvas>
+    <div class="col-6" style="background-color: red" onmousemove="coordinate(event)" onresize="canvasSizeSetter()">
+        <canvas id="gamefield" style="background-color: blue" onresize="canvasSizeSetter()"></canvas>
         <script src="{% static 'js/test.js'%}"></script>
     </div>
 </div>

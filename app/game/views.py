@@ -25,4 +25,4 @@ def game(request):
 
     print(state)
 
-    return render(request=request, template_name="game/gamefield.html", context={"field": state, "alphabet": ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'], "numbers": [0,1,2,3,4,5,6,7,8,9]})
+    return render(request=request, template_name="game/canvasgamefield.html", context={"field": state, "alphabet": ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'], "numbers": [0,1,2,3,4,5,6,7,8,9]})
