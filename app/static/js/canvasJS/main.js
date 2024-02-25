@@ -1,52 +1,19 @@
-class Button {
-    constructor(pos_x, pos_y, width, height, ctx) {
-    this.position_x = pos_x
-    this.position_y = pos_y
-    this.width = width
-    this.height = height
-    this.ctx = ctx
-    }
+/*
+js module file structure
+    -1- import statements
+    -2- global variables
+    -3- local module variables (let)
+    -4- local file variables (let)
+    -5- export classes, functions
+    -6- classes, functions
+    -7- calls
+*/
+import Button from "./button.js";
 
-    draw() {
-    this.ctx.fillStyle = "rgb(180, 180, 180)";
-    this.ctx.fillRect(this.position_x,this.position_y,this.width,this.height);
-    }
-
-    click_cheker(x, y) {
-        if (x >= this.position_x & x <= this.position_x+this.width & y >= this.position_y & y <= this.position_y+this.width) {
-        ctx.fillStyle = "rgb(123, 10, 50)";
-        ctx.fillRect(this.position_x,this.position_y,this.width,this.height);
-        return true
-        }
-        return false
-    }
-}
-
-function mouseLeftButtonDown(event) {
-    let x = event.clientX;
-    let y = event.clientY;
-    my_bytton.click_cheker(x, y)
-}
-
-//setInterval(myFunction, 1000);
-
-
-
-
-
-
-
-
-
-
-console.log("hello1233")
 var canvas = document.getElementById("gamefield");
 var ctx = canvas.getContext("2d");
+var button_list = []
 
-//var my_bytton = new Button(40, 40, 40, 40, ctx)
-
-
-canvasSizeSetter()
 visualViewport.onresize = () => {
     canvas.width = window.innerWidth - 5
     canvas.height = window.innerHeight - 5
@@ -76,23 +43,22 @@ function Button_func(event) {
 
 //my_bytton.draw(ctx)
 
-var button_list = []
 
-function fieldMaker(startx, starty, amount) {
-    x = 0
-    y = 0
+
+function fieldMaker(startx, starty, width, height, amount) {
+    let x = 0
+    let y = 0
     for (let i = 0; i <= amount*amount; i++) {
-        button_list.push(new Button(40+x, 40+y, 40, 40, ctx))
-        x += 60
+        button_list.push(new Button(startx+x, starty+y, width, height, ctx))
+        x += 50
         if (Number.isInteger(i/10)) {
-            y += 60
+            y += 50
             x = 0
         }
     }
 }
 
-fieldMaker(0,0,10)
-console.log(button_list[0])
+
 
 function fieldDrawer() {
     for (let i = 0; i < button_list.length; i++) {
@@ -101,12 +67,20 @@ function fieldDrawer() {
     }
 }
 
-fieldDrawer()
 
 function clickCheker(event) {
     let x = event.clientX;
     let y = event.clientY;
     for (let i = 0; i <= button_list.length; i++) {
-        button_list[i].click_cheker(x, y)
+        button_list[i].clickChecker(x, y)
     }
 }
+
+canvas.addEventListener("mousedown", function(event) {
+clickCheker(event);
+});
+
+fieldMaker(0,0,40,40,10)
+console.log(button_list[0])
+fieldDrawer()
+canvasSizeSetter()
