@@ -23,6 +23,6 @@ def game(request):
     for index, value in enumerate(state[0]):
         value['display_value'] = alphabet[index]
 
-    print(state)
+    #print(state)
 
     return render(request=request, template_name="game/canvasgamefield.html", context={"field": state, "alphabet": ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'], "numbers": [0,1,2,3,4,5,6,7,8,9]})
