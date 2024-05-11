@@ -17,6 +17,7 @@ var ctx = canvas.getContext("2d");
 var mainField = new gameField(canvas, ctx)
 
 
+
 function canvasSizeSetter() {
     canvas.width = 1200
     canvas.height = 1200
@@ -34,7 +35,20 @@ visualViewport.onresize = () => {
 
 canvas.addEventListener("mousedown", function(event) {
     mainField.onLeftMouseButtonDown(event)
+    mainField.draw()
     });
+
+canvas.addEventListener("mousemove", function(event) {
+    mainField.onMouseHover(event)
+    mainField.draw()
+    });
+
+window.addEventListener("keydown", function(event) {
+    if (event.keyCode === 82){
+        mainField.aligmentChanger()
+    }
+})
+
 
 canvasSizeSetter()
 
