@@ -89,6 +89,7 @@ export class playerGameField {
         this.amount = amount
         this.ctx = ctx
         this.button_list = []
+        this.ship_dictionary = {"1": 2, "2": 3, "3": 2, "4": 1, "5": 1}
     }
 
     fieldInit() {
@@ -121,7 +122,7 @@ export class playerGameField {
         console.log(chooser)
         for (let i = 0; i < this.button_list.length; i++) {
 
-            if (this.button_list[i].click(x, y) == true & this.button_list[i].is_active == true) {
+            if (this.button_list[i].click(x, y) == true & this.button_list[i].is_active == true & this.ship_dictionary[String(chooser)] > 0) {
 
                 if (shipAligment == 0 & i-11*chooser > 0) {
                    let is_allowed = true
@@ -138,17 +139,19 @@ export class playerGameField {
                            this.button_list[i-a*11].is_active = false
                            this.button_list[i-a*11].ishovered = false
                            this.button_list[(i-a*11)-1].is_active = false
-                           this.button_list[(i-a*11)+1].is_active = false
                            this.button_list[(i-a*11)-12].is_active = false
                            this.button_list[(i-a*11)-11].is_active = false
                            this.button_list[(i-a*11)-10].is_active = false
-                           if (this.button_list[(i-a)+12]) {
+                           if (this.button_list[i+12]) {
+                           this.button_list[(i-a*11)+1].is_active = false
                            this.button_list[(i-a*11)+12].is_active = false
                            this.button_list[(i-a*11)+11].is_active = false
                            this.button_list[(i-a*11)+10].is_active = false
                            }
                        console.log(this.button_list[(i-a*11)-11].is_active)
                        }
+                       this.ship_dictionary[String(chooser)] -= 1
+                       console.log(this.ship_dictionary)
 
                    }
                 }
@@ -169,17 +172,19 @@ export class playerGameField {
                            this.button_list[i-a].is_active = false
                            this.button_list[i-a].ishovered = false
                            this.button_list[(i-a)-1].is_active = false
-                           this.button_list[(i-a)+1].is_active = false
                            this.button_list[(i-a)-12].is_active = false
                            this.button_list[(i-a)-11].is_active = false
                            this.button_list[(i-a)-10].is_active = false
-                           if (this.button_list[(i-a)+12]) {
+                           if (this.button_list[i+12]) {
+                           this.button_list[(i-a)+1].is_active = false
                            this.button_list[(i-a)+12].is_active = false
                            this.button_list[(i-a)+11].is_active = false
                            this.button_list[(i-a)+10].is_active = false
                            }
                        console.log(this.button_list[(i-a)-11].is_active, "23231233")
                        }
+                       this.ship_dictionary[String(chooser)] -= 1
+                       console.log(this.ship_dictionary)
                    }
                 }
             }
