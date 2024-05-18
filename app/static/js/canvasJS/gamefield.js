@@ -1,4 +1,5 @@
 import Button from "./button.js";
+import ChooseButton from "./button.js";
 
 export default class gameField {
     constructor(canvas, ctx) {
@@ -141,9 +142,11 @@ export class playerGameField {
                            this.button_list[(i-a*11)-12].is_active = false
                            this.button_list[(i-a*11)-11].is_active = false
                            this.button_list[(i-a*11)-10].is_active = false
+                           if (this.button_list[(i-a)+12]) {
                            this.button_list[(i-a*11)+12].is_active = false
                            this.button_list[(i-a*11)+11].is_active = false
                            this.button_list[(i-a*11)+10].is_active = false
+                           }
                        console.log(this.button_list[(i-a*11)-11].is_active)
                        }
 
@@ -170,9 +173,11 @@ export class playerGameField {
                            this.button_list[(i-a)-12].is_active = false
                            this.button_list[(i-a)-11].is_active = false
                            this.button_list[(i-a)-10].is_active = false
+                           if (this.button_list[(i-a)+12]) {
                            this.button_list[(i-a)+12].is_active = false
                            this.button_list[(i-a)+11].is_active = false
                            this.button_list[(i-a)+10].is_active = false
+                           }
                        console.log(this.button_list[(i-a)-11].is_active, "23231233")
                        }
                    }

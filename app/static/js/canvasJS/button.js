@@ -1,7 +1,8 @@
+import BaseButton from "./base.js";
 
-
-export default class Button {
+export default class Button extends BaseButton{
     constructor(pos_x, pos_y, width, height, ctx, ind) {
+    super(pos_x, pos_y, width, height, ctx);
     this.position_x = pos_x;
     this.position_y = pos_y;
     this.width = width;
@@ -60,3 +61,4 @@ export default class Button {
         }
     }
 }
+
