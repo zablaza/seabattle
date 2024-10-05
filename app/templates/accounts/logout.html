@@ -6,7 +6,7 @@
 </head>
 <body>
 {% if user.is_authenticated %}
-<form action="{% url 'playground:close_notification' %}" method="post">
+<!--<form action=" url 'playground:close_notification' " method="post">-->
     {%csrf_token%}
 <div style="overflow-y: scroll; height:100px;" class="box">
     <p>{{context}}</p>
