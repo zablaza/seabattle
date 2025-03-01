@@ -1,5 +1,4 @@
-import Button from "./button.js";
-import ChooseButton from "./button.js";
+import {Button, ChooseButton} from "./button.js";
 
 export default class gameField {
     constructor(canvas, ctx) {
@@ -7,8 +6,8 @@ export default class gameField {
     this.ctx = ctx
     this.field1 = new playerGameField(10, 10, 40, 40, 11, ctx)
     this.field2 = new playerGameField(600, 10, 40, 40, 11, ctx)
-    this.shipAligment = 1
-    this.shipbuttonlist = []
+    this.sbl = this.field1.button_list // shipbuttonlist
+    this.button_list_for_python = []
     }
 
     fieldInit() {
@@ -16,21 +15,18 @@ export default class gameField {
         this.field2.fieldInit()
         this.field1.marker()
         this.field2.marker()
-        this.chooser = 1
-        this.chooserInit()
     }
 
     draw() {
         this.field1.fieldDraw()
         this.field2.fieldDraw()
-        this.chooserDraw()
     }
 
     onLeftMouseButtonDown(event) {
-        this.field2.clickCheker(event, this.shipbutton, this.shipAligment, this.chooser);
-        this.field1.clickCheker(event, this.shipbutton, this.shipAligment, this.chooser);
-        this.chooserClickCheker(event)
-        //this.shipbutton.click(event.clientX, event.clientY)
+        // call methods that do logic of clicks for all elements on gamefield
+
+        // Forgot the reason why we use this method here (basically it has the same idea as chooserClickCeker()
+//        this.field1.clickCheker(event, this.shipbutton, this.shipAligment, this.chooser, this.shipbuttonlist);
     }
 
     onMouseHover(event) {
@@ -41,47 +37,12 @@ export default class gameField {
         this.field1.hoverCheker(event, this.chooser, this.shipbutton, this.shipAligment);
     }
 
-    chooserInit() {
-        let x = 0
-        let step = 41
-        for (let i=0; i<5; i++) {
-            this.shipbuttonlist.push(new Button(555+x, 555, 40, 40, this.ctx, 0))
-            this.shipbuttonlist[i].type = 'ship_chooser'
-            x += step
-        }
-    }
 
-    chooserDraw() {
-        for (let i=0; i<5; i++) {
-        this.shipbuttonlist[i].draw()
-        }
-    }
-
-    chooserClickCheker(event) {
-        let x = event.clientX;
-        let y = event.clientY;
-
-        for (let i=0; i<5; i++) {
-        this.shipbuttonlist[i].is_clicked = false
-        if (this.shipbuttonlist[i].click(x, y)) {
-        this.shipbuttonlist[i].is_clicked = true
-        this.chooser = i+1
-        }
-        }
-    }
-
-    aligmentChanger() {
-    if (this.shipAligment == 0) {
-        this.shipAligment = 1
-    }
-    else if (this.shipAligment == 1) {
-        this.shipAligment = 0
-        }
-    }
 }
 
 export class playerGameField {
     constructor(startx, starty, width, height, amount, ctx) {
+        this.ship_amount = 23
         this.startx = startx
         this.starty = starty
         this.width = width
@@ -90,6 +51,28 @@ export class playerGameField {
         this.ctx = ctx
         this.button_list = []
         this.ship_dictionary = {"1": 2, "2": 3, "3": 2, "4": 1, "5": 1}
+        this.ship_cords = {
+            "1": [
+                [],  // empty_index = 0
+                []  // empty_index = 1
+            ],
+            "2": [
+                [],
+                [],
+                []
+            ],
+            "3": [[], []],
+            "4": [[]],
+            "5": [[]]
+        }
+        this.current_step = []
+
+
+         /*{"1": [[2], [15]],
+          "2": [[4, 5], [15, 25]],
+          "3": [[7,8,9], [50,60,70]],
+          "4": [[45,46,47,48], [1,2,3,4]],
+          "5": [[1, 2, 3, 4, 5]]}*/
     }
 
     fieldInit() {
@@ -116,42 +99,48 @@ export class playerGameField {
          }
     }
 
-    clickCheker(event, shipbutton, shipAligment, chooser) {
+    clickCheker(event, shipbutton, shipAligment, chooser, shipbuttonlist) {
         let x = event.clientX;
         let y = event.clientY;
-        console.log(chooser)
         for (let i = 0; i < this.button_list.length; i++) {
 
             if (this.button_list[i].click(x, y) == true & this.button_list[i].is_active == true & this.ship_dictionary[String(chooser)] > 0) {
+
+
 
                 if (shipAligment == 0 & i-11*chooser > 0) {
                    let is_allowed = true
                    for (let b = 0; b < chooser; b++){
                        if (this.button_list[i-b*11].is_active == false){
-                           is_allowed = false
+                           is_allowed = true
                            break
                        }
                    }
                    if (is_allowed == true){
-                       console.log("allowed")
                        for (let a = 0; a < chooser; a++) {
-                           this.button_list[i-a*11].is_clicked = true
-                           this.button_list[i-a*11].is_active = false
-                           this.button_list[i-a*11].ishovered = false
-                           this.button_list[(i-a*11)-1].is_active = false
-                           this.button_list[(i-a*11)-12].is_active = false
-                           this.button_list[(i-a*11)-11].is_active = false
-                           this.button_list[(i-a*11)-10].is_active = false
+                           this.button_list[i-a*11].is_clicked = true;
+                           this.current_step = i-a*11
+                           this.button_list[i-a*11].is_active = false;
+                           this.button_list[i-a*11].ishovered = false;
+                           this.button_list[(i-a*11)-1].is_active = false;
+                           this.button_list[(i-a*11)-12].is_active = false;
+                           this.button_list[(i-a*11)-11].is_active = false;
+                           this.button_list[(i-a*11)-10].is_active = false;
                            if (this.button_list[i+12]) {
-                           this.button_list[(i-a*11)+1].is_active = false
-                           this.button_list[(i-a*11)+12].is_active = false
-                           this.button_list[(i-a*11)+11].is_active = false
-                           this.button_list[(i-a*11)+10].is_active = false
-                           }
-                       console.log(this.button_list[(i-a*11)-11].is_active)
+                           this.button_list[(i-a*11)+1].is_active = false;
+                           this.button_list[(i-a*11)+12].is_active = false;
+                           this.button_list[(i-a*11)+11].is_active = false;
+                           this.button_list[(i-a*11)+10].is_active = false;
+                           };
                        }
-                       this.ship_dictionary[String(chooser)] -= 1
-                       console.log(this.ship_dictionary)
+                      this.ship_dictionary[String(chooser)] -= 1;
+                      shipbuttonlist[String(chooser-1)].counter = this.ship_dictionary[String(chooser)];
+                      $.ajax({
+                            type: "POST",
+                            url: "{% url '' %}",
+                            data: {
+                            "state": button_list,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'}})
 
                    }
                 }
@@ -161,14 +150,14 @@ export class playerGameField {
                    let is_allowed = true
                    for (let b = 0; b < chooser; b++){
                        if (this.button_list[i-b].is_active == false){
-                           is_allowed = false
+                           is_allowed = true
                            break
                        }
                    }
                    if (is_allowed == true){
-                       console.log("allowed")
                        for (let a = 0; a < chooser; a++) {
                            this.button_list[i-a].is_clicked = true
+                           this.current_step = i-a
                            this.button_list[i-a].is_active = false
                            this.button_list[i-a].ishovered = false
                            this.button_list[(i-a)-1].is_active = false
@@ -181,10 +170,9 @@ export class playerGameField {
                            this.button_list[(i-a)+11].is_active = false
                            this.button_list[(i-a)+10].is_active = false
                            }
-                       console.log(this.button_list[(i-a)-11].is_active, "23231233")
                        }
-                       this.ship_dictionary[String(chooser)] -= 1
-                       console.log(this.ship_dictionary)
+                       this.ship_dictionary[String(chooser)] -= 1;
+                      shipbuttonlist[String(chooser-1)].counter = this.ship_dictionary[String(chooser)];
                    }
                 }
             }

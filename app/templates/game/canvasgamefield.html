@@ -6,4 +6,9 @@
 <script type="module" src="{% static 'js/canvasJS/main.js'%}"></script>
 <input id="X"/>
 <input id="Y"/>
+<form action="{% url 'game:aj' %}" method="post">
+    {% csrf_token %}
+    <input hidden value="" name="form_test" id="debug">
+    <input type="submit" name="test" id="debug_button">
+</form>
 {% endblock body %}
