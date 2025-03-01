@@ -26,7 +26,6 @@ var chooserButton = new ShipPlacement(canvas, ctx, mainField);
 function on_debug_button(event){
     //event.preventDefault();
     var payload_data = [mainField.field1.button_list, mainField.field1.current_step, mainField.field1.ship_amount, current_state]
-//    console.log(JSON.stringify(payload_data), "payyyyyyyloaaaadddata")
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const request = new Request(
         api_game_endpoint,
@@ -45,16 +44,10 @@ function on_debug_button(event){
             console.log(response["status"], "12er22efge23efe")
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        /*else {
-            chooserButton.setForbiddenZoneAroundPlacedShip(chooserButton.iteration_number_i, chooserButton.iteration_number_a, chooserButton.aligment_number_b)
-            console.log("set done!!!!!!!!!!")
-        }*/
+
         return response.json(); // Parse the JSON from the response
         })
         .then(function(data) {
-            console.log(mainField.field1.ship_amount, "saf")
-            console.log(data.data.payload_data.ship_amount, "sab")
-            console.log(current_state, "cssssss")
             mainField.field1.ship_amount = data.data.payload_data.ship_amount
 //            alert(JSON.stringify(data)); // Display the response data in an alert box
             //console.log(data); // Log the response data to the console

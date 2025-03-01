@@ -12,7 +12,6 @@ export default class ShipPlacement {
 
         this.shipbuttonlist = gamefieldObject.field1.button_list
         this.ship_cords = gamefieldObject.field1.ship_cords
-        console.log(this.ship_cords, "ship_cords")
         this.chooser = 1  // deck length
         this.ship_dictionary = gamefieldObject.field1.ship_dictionary
 
@@ -40,12 +39,10 @@ export default class ShipPlacement {
     fieldStart() {
         let x = event.clientX;
         let y = event.clientY;
-        console.log(this.start_button.click(x, y), this.ship_amount)
         if (this.start_button.click(x, y) && this.ship_amount == 0){
             for (let i=0; i<this.shipbuttonlist.length; i++) {
                 this.shipbuttonlist[i].is_active = false
             }
-            console.log('started')
             return 1
         }
         return 0
@@ -84,7 +81,6 @@ export default class ShipPlacement {
     resetHover() {
         let x = event.clientX;
         let y = event.clientY;
-        console.log(this.reset_button.height)
         this.reset_button.hover(x, y)
     }
 
@@ -148,17 +144,9 @@ export default class ShipPlacement {
     }
 
     setForbiddenZoneAroundPlacedShip(i, a, b) {
-        console.log(this.iteration_number_i, this.iteration_number_a, b, "wwfwrwefwwefwwfwf")
         if (typeof i === 'number' && typeof a === 'number' && typeof b === 'number') {
             // One deck at time
-            //this.ship_cords = []
-    //        console.log(">",this.chooser)
-    //        console.log("->",this.empty_index)
-    //        console.log("-->",this.ship_cords[String(this.chooser)][this.empty_index])
-    //        console.log("--->",this.ship_cords[String(this.chooser)])
-    //        console.log("---->",this.ship_cords)
             for (let a = 0; a < this.chooser; a++) {
-                console.log(i-a*b, "<---------------------------------------------")
                 this.ship_cords[String(this.chooser)][this.empty_index].push(i-a*b);
 
                 this.shipbuttonlist[i-a*b].is_clicked = true;
