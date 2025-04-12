@@ -2,7 +2,7 @@
 стан буде перевірятись кожен раз після встановлення корабля
 """
 from django import forms
-from core.models import GameState
+from core.models import GameState, MidGame, GameList
 import json
 
 SHIP_CELLS_AMOUNT = 23
@@ -77,17 +77,32 @@ class StateForm(forms.ModelForm):
         })
         return cleaned_data
 
-# class MidGameForm(forms.ModelForm):
-#     class Meta:
-#         model = GameState
-#         fields = ["game_state", "players_hit", "ships_remain", "player"]
-#
-#     cleaned_data = super().clean()
-#     state = json.loads(cleaned_data.get("game_state", "{}"))
-#     hit = json.loads(cleaned_data.get("players_hit", "{}"))
-#
-#
-#     for a in range(len(state)):
-#         if state[a].is_hit is False and hit == a:
-#             pass
-#             #return cleaned_data
+class MidGameForm(forms.ModelForm):
+    class Meta:
+        model = MidGame
+        fields = ["game_state", "players_hit", "ships_remain", "player"]
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+        state = json.loads(cleaned_data.get("game_state", "{}"))
+        hit = json.loads(cleaned_data.get("players_hit", "{}"))
+        ships_remain = json.loads(cleaned_data.get("ships_remain", "{}"))
+    #
+    #
+        for a in range(len(state)):
+            if state[a]["is_hit"] is False and hit == a and state[a]["is_clicked"] is False:
+                pass
+            elif state[a]["is_hit"] is False and hit == a and state[a]["is_clicked"] is True:
+                ships_remain -= 1
+
+        return cleaned_data
+
+class GameListForm(forms.ModelForm):
+    class Meta:
+        model = GameList
+        fields = ["status", "player_1", "player_2"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data

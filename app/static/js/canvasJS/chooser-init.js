@@ -52,6 +52,8 @@ export default class ShipPlacement {
         let x = event.clientX;
         let y = event.clientY;
         if (this.reset_button.click(x, y) === true){
+            this.ship_amount = 23
+            console.log(this.ship_amount)
             for (let i=0; i < this.shipbuttonlist.length; i++) {
                 if (this.shipbuttonlist[i].value == "") {
                     this.shipbuttonlist[i].is_clicked = false
@@ -74,6 +76,7 @@ export default class ShipPlacement {
                     console.log(this.chooserButtons)
                 }
             }
+            return true
         }
 
     }

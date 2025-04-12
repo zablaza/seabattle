@@ -11,6 +11,7 @@ js module file structure
 //import playerGameField from "./gamefield.js";
 import gameField from "./gamefield.js";
 import ShipPlacement from "./chooser-init.js";
+import middleGame from "./midgame.js";
 
 const host_address = "http://127.0.0.1:8000/"
 const api_game_endpoint = "game_async/"
@@ -22,52 +23,102 @@ var ctx = canvas.getContext("2d");
 
 var mainField = new gameField(canvas, ctx);
 var chooserButton = new ShipPlacement(canvas, ctx, mainField);
+var midGame = new middleGame(canvas, ctx, mainField);
+var queue = 1
 
 function on_debug_button(event){
     //event.preventDefault();
-    var payload_data = [mainField.field1.button_list, mainField.field1.current_step, mainField.field1.ship_amount, current_state]
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const request = new Request(
-        api_game_endpoint,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',//'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken,
-            },
-            mode: 'same-origin', // Do not send CSRF token to another domain.
-            body: JSON.stringify(payload_data),
-        }
-            )
-    fetch(request).then(function(response) {
-        if (response["status"] !== 200) {
-            console.log(response["status"], "12er22efge23efe")
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-
-        return response.json(); // Parse the JSON from the response
-        })
-        .then(function(data) {
-            mainField.field1.ship_amount = data.data.payload_data.ship_amount
-//            alert(JSON.stringify(data)); // Display the response data in an alert box
-            //console.log(data); // Log the response data to the console
-            if (data.status === 'success'){
-                chooserButton.setForbiddenZoneAroundPlacedShip(chooserButton.iteration_number_i, chooserButton.iteration_number_a, chooserButton.aligment_number_b)
-                mainField.draw()
+    if (current_state == 0){
+    console.log("000")
+        var payload_data = [current_state, mainField.field1.button_list, mainField.field1.current_step, mainField.field1.ship_amount]
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const request = new Request(
+            api_game_endpoint,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',//'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                },
+                mode: 'same-origin', // Do not send CSRF token to another domain.
+                body: JSON.stringify(payload_data),
             }
-            else if (data.status === 'fail'){
-                alert(JSON.stringify(data));
-                if (data.data.status_code === 3){
+                )
+        fetch(request).then(function(response) {
+            if (response["status"] !== 200) {
+                console.log(response["status"], "12er22efge23efe")
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            return response.json(); // Parse the JSON from the response
+            })
+            .then(function(data) {
+                mainField.field1.ship_amount = data.data.payload_data.ship_amount
+                console.log(data.data.payload_data.ship_amount, "sh")
+                if (mainField.field1.ship_amount == 0){
+                    current_state = 1
                 }
-            }
-            else if (data.status === 'error'){
+                console.log(current_state, "cs")
+    //            alert(JSON.stringify(data)); // Display the response data in an alert box
+                //console.log(data); // Log the response data to the console
+                if (data.status === 'success'){
+                    chooserButton.setForbiddenZoneAroundPlacedShip(chooserButton.iteration_number_i, chooserButton.iteration_number_a, chooserButton.aligment_number_b)
+                    mainField.draw()
+                }
+                else if (data.status === 'fail'){
+                    alert(JSON.stringify(data));
+                    if (data.data.status_code === 3){
+                    }
+                }
+                else if (data.status === 'error'){
 
+                }
+            })
+            .then(function(error) {
+                if (error)
+                    console.error('Error:', error); // Handle any errors that occurred during fetch
+                });
+    }
+    if (current_state == 1){
+    console.log("111")
+        var payload_data = [current_state, midGame.hitted_button, midGame.ships_remain]
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const request = new Request(
+            api_game_endpoint,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',//'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                },
+                mode: 'same-origin', // Do not send CSRF token to another domain.
+                body: JSON.stringify(payload_data),
             }
-        })
-        .then(function(error) {
-            if (error)
-                console.error('Error:', error); // Handle any errors that occurred during fetch
-            });
+                )
+        fetch(request).then(function(response) {
+            if (response["status"] !== 200) {
+                console.log(response["status"], "12er22efge23efe")
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            return response.json(); // Parse the JSON from the response
+            })
+            .then(function(data) {
+                mainField.field1.ship_amount = data.data.payload_data.ship_amount
+//                if (queue == 0){
+//                    queue = 1
+//                    }
+//                else if (queue == 1){
+//                    queue = 0
+//                }
+    //            alert(JSON.stringify(data)); // Display the response data in an alert box
+                //console.log(data); // Log the response data to the console
+            })
+            .then(function(error) {
+                if (error)
+                    console.error('Error:', error); // Handle any errors that occurred during fetch
+                });
+    }
 
 
 //    //event.preventDefault()
@@ -115,7 +166,9 @@ visualViewport.onresize = () => {
 
 canvas.addEventListener("mousedown", function(event) {
     if (current_state == 0) {
-        chooserButton.fieldReset()
+        if (chooserButton.fieldReset()){
+            mainField.field1.ship_amount = 23
+        }
         let is_ship_placed = chooserButton.chooserClickCheker(event);
         if (is_ship_placed === true) {
             on_debug_button(event)
@@ -124,6 +177,11 @@ canvas.addEventListener("mousedown", function(event) {
         chooserButton.chooserDraw();
     }
     if (current_state == 1){
+        if (queue == 1){
+            midGame.game()
+            console.log(111212121213330000)
+        }
+        console.log("b")
     }
     mainField.draw()
     });

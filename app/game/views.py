@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 import json
-from .forms import StateForm, ship_cells_amount_checker
+from .forms import StateForm, ship_cells_amount_checker, MidGameForm, GameListForm
 from core.models import GameState
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -42,7 +42,6 @@ def ajax_request(request):
 
     if request.method == "POST":
         player_data = request.body
-
         try:
             player_data = json.loads(player_data)
         except json.JSONDecodeError:
@@ -56,32 +55,44 @@ def ajax_request(request):
                     }
                 }
             )
-        if len(player_data) != 4:
-            print("ERROR: length of list is not 2!!!")
-            return JsonResponse(
+        current_game_state = player_data[0]
 
-                data={
-                "status": "fail",
-                "data": {
-                    "payload_data": "Payload data has incorrect attribute amount. Expected 2, got {}".format(len(player_data)),
-                    "status_code": 453,
-                }
-            })
-        ship_amount = player_data[2]
-        field_state = player_data[0]
-        current_game_state = player_data[3]
-        step = player_data[1]
 
-        form = StateForm({
-            "game_state_1": json.dumps(field_state),
-            "game_state_2": "{}",
-            "players_step": json.dumps(step),
-            "ship_amount": json.dumps(ship_amount),
-            "player_1": request.user,
-            "player_2": request.user}
-        )
 
-        if current_game_state == 0 or current_game_state == 1:
+
+
+
+        if current_game_state == 0:
+
+            if len(player_data) != 4:
+                print("ERROR: length of list is not 2!!!")
+                return JsonResponse(
+
+                    data={
+                        "status": "fail",
+                        "data": {
+                            "payload_data": "Payload data has incorrect attribute amount. Expected 2, got {}".format(
+                                len(player_data)),
+                            "status_code": 453,
+                        }
+                    })
+            ship_amount = player_data[3]
+            field_state = player_data[1]
+            step = player_data[2]
+
+
+
+
+            form = StateForm({
+                "game_state_1": json.dumps(field_state),
+                "game_state_2": "{}",
+                "players_step": json.dumps(step),
+                "ship_amount": json.dumps(ship_amount),
+                "player_1": request.user,
+                "player_2": request.user,
+                "current_game_state": current_game_state}
+            )
+            print(current_game_state)
             if form.is_valid():
                 amount = form.cleaned_data.get("ship_amount")
                 state = form.cleaned_data.get("game_state_1")
@@ -97,6 +108,12 @@ def ajax_request(request):
                     #         print("no")
                     #         respondd = "no"
                     # state = json.dumps(state)
+                    form_list = GameListForm({
+                        "status": 1,
+                        "player_1": request.user,
+                        "player_2": request.user})
+                    if form_list.is_valid():
+                        form_list.save()
                     form.save()
 
 
@@ -126,7 +143,23 @@ def ajax_request(request):
                     },
                 })
         elif current_game_state == 1:
-            pass
+            play_hit = player_data[1]
+            ships_remain = player_data[2]
+            form_mid2 = MidGameForm({
+                "players_hit": "1",
+                "player": request.user,
+                "state": current_game_state,
+                "ships_remain": ships_remain
+            })
+            if form_mid2.is_valid():
+                cleaned_d = copy.copy(form_mid2.cleaned_data)
+                return JsonResponse({
+                    "status": "success",
+                    "data": {
+                        "payload_data": cleaned_d,  # <--- Same message as in form ValidationError (in raise)
+                        "status_code": 200
+                    }
+            })
     #print(request.POST, "post")
     # return render(request=request, template_name="game/canvasgamefield.html", context={"a": "qweqw"})
 

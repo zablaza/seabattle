@@ -105,6 +105,8 @@ export class ChooseButton extends BaseButton{
     this.color = "rgb(180, 180, 180)";
     this.clicked_color = "rgb(123, 10, 50)";
     this.hovered_color = "rgb(0, 256, 0)";
+    this.missed_color = "rgb(0, 0, 0)"
+    this.hitted_color = "rgb(255, 255, 0)"
     this.stroke_style = "rgb(0, 0, 256)";
     this.shrift = "20px Impact";
     }
@@ -129,7 +131,7 @@ export class ChooseButton extends BaseButton{
             color = this.color;
         } else if (this.is_clicked == true) {
             color = this.clicked_color;
-        }
+        } else if (this.is)
 
         if (this.ishovered == true) {
             color = this.hovered_color;
